@@ -17,6 +17,7 @@ public class Main
   private ImageIcon img;
   private JLabel imageLabel;
   private JLabel outputLabel;
+  private JTextArea userInput;
   
   public static void main(String[] args) {
     // Create the GUI
@@ -29,8 +30,21 @@ public class Main
   public void loadCountries() 
   {
     // Open the data file. Please note that the file structure we're working with requires the full file path as shown here unlike what you saw in runestone where the file name was sufficient.
+    try{
     File file = new File("/workspaces/Countries/workspace/countries-data.csv");
-    
+    Scanner scan = new Scanner(file);
+    int i=0;
+    while (scan.hasNext() &&i<countryArray.length){
+      String line =scan.nextLine();
+      String [] split = line.split(",");
+
+      countryArray[i]=new Country(split[0],split[1],split[2],split[3]);
+      i++;
+    }
+    scan.close();
+    }catch(IOException e){
+      System.out.println("file couldn't be opened");
+    }
     //create a scanner and a loop to read from the file until you've read everything.
     // inside the loop you'll need to read in a line from the file and use "split" to break up the data into destinct parts.
     // create a new Country using your constructor with 4 arguments (each of the arguments is a different part of the line you've read in)
@@ -44,35 +58,60 @@ public class Main
   */
   public void showCountry() {
     // Get the country at index from countryArray
-    
+    Country c = countryArray[index];
+    String imageFile= c.getImageFile();
     // Use its get method to get the its image file name and save it into imagefile variable below instead of worldmap.jpg.
-    String imagefile = "worldmap.jpg";
+
     // Use the following code to create an new Image Icon and put it into the GUI
-    img = new ImageIcon("/workspaces/Countries/workspace/"+imagefile);
+    img = new ImageIcon("/workspaces/Countries/workspace/"+imageFile);
     imageLabel.setIcon(img);
+    outputLabel.setText("What is the capital of this country");
   }
   
   /* nextButton should increment index. If the index is greater than 9, reset it back to 0. Clear the outputLabel to empty string using setText, and call showCountry();*/
   public void nextButtonClick()
   {
-    
+    index++;
+    if (index>=countryArray.length){
+      index=0;
+    }
+    outputLabel.setText("");
+    userInput.setText("");
+    showCountry();
+
   }
-  
   /* reviewButton should get the country at index from the countryArray, call its toString() method and save the result, print it out with System.out.println and as an argument to outputLabel.setText( text to print out ); */
   public void reviewButtonClick()
   {
+     Country c= countryArray[index];
      
-  }
+     
+   
+      outputLabel.setText("The capital of "+c.getName()+ " is "+c.getCapital() +".");
+    
+    } 
+
 
   /* quizButton should clear the outputLabel (outputLabel.setText to empty string), get the country at index from countryArray, print out a question about it like What country is this? and/or What's this country's capital?. Get the user's answer using scan.nextLine() and check if it is equal to the country's data using its get methods and print out correct or incorrect.
   */
   public void quizButtonClick()
   {
     Scanner scan = new Scanner(System.in); 
+    Country c = countryArray[index];
+    String answer = userInput.getText().trim();
+
+      if(answer.equalsIgnoreCase((c.getCapital()))){
+        outputLabel.setText("Correct");
+      }else{
+        outputLabel.setText("Incorrect, The capital is "+ c.getCapital());
+      }
+      userInput.setText("");
+      scan.close();
+      }
+
     
     
-    
-  }
+  
 
 
 
@@ -101,6 +140,8 @@ public Main() {
         jFrame.add(outputLabel);
         jFrame.setVisible(true);
         // add event listener for button click
+        userInput = new JTextArea(1,40);
+        jFrame.add(userInput);
         reviewButton.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) 
     {
