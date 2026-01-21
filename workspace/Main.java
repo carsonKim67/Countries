@@ -1,9 +1,12 @@
+//Carson Kim  -  Countries Project 1/20/26 - This program creates a countries quiz with working quiz, next, and review buttons.
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
 
+//main class - contains main method and GUI methods
 public class Main 
 {
 
@@ -19,6 +22,8 @@ public class Main
   private JLabel outputLabel;
   private JTextArea userInput;
   
+  //pre con - load and show countries method works correctly
+  //post con - creates the GUI and loads the country data
   public static void main(String[] args) {
     // Create the GUI
     Main gui = new Main();
@@ -27,21 +32,25 @@ public class Main
   }
 
   /* loadCountries() reads in the data from the countries-data.csv file and fills in the countryArray with data. You need to add the loop that reads in the country data into the array. */
+  //pre con - countries-data.csv file exists and is formatted correctly
+  //post con - countryArray is filled with Country objects created from the data file
   public void loadCountries() 
   {
-    // Open the data file. Please note that the file structure we're working with requires the full file path as shown here unlike what you saw in runestone where the file name was sufficient.
+    //try to open the file and read from it
     try{
     File file = new File("/workspaces/Countries/workspace/countries-data.csv");
     Scanner scan = new Scanner(file);
     int i=0;
+    //loop to read from the file until everything is read
     while (scan.hasNext() &&i<countryArray.length){
       String line =scan.nextLine();
       String [] split = line.split(",");
-
       countryArray[i]=new Country(split[0],split[1],split[2],split[3]);
       i++;
     }
+    //close the scanner
     scan.close();
+    //catch block to handle file not found exception
     }catch(IOException e){
       System.out.println("file couldn't be opened");
     }
@@ -56,6 +65,8 @@ public class Main
 
   /* showCountry() will show the image associated with the current country. It should get the country at index from the countryArray. It should use its get method to get its image file name and use the code below to put the image in the GUI.
   */
+ //pre con - countryArray is filled with Country objects
+ //post con - GUI shows the image of the country at countryArray[index]
   public void showCountry() {
     // Get the country at index from countryArray
     Country c = countryArray[index];
@@ -69,6 +80,8 @@ public class Main
   }
   
   /* nextButton should increment index. If the index is greater than 9, reset it back to 0. Clear the outputLabel to empty string using setText, and call showCountry();*/
+  //pre con - countryArray is filled with Country objects
+  //post con - index is incremented (or reset to 0), outputLabel is cleared, and showCountry() is called - goes to next country
   public void nextButtonClick()
   {
     index++;
@@ -81,6 +94,8 @@ public class Main
 
   }
   /* reviewButton should get the country at index from the countryArray, call its toString() method and save the result, print it out with System.out.println and as an argument to outputLabel.setText( text to print out ); */
+  //pre con - countryArray is filled with Country objects
+  //post con - outputLabel shows the data of the country at countryArray[index]
   public void reviewButtonClick()
   {
      Country c= countryArray[index];
@@ -94,6 +109,8 @@ public class Main
 
   /* quizButton should clear the outputLabel (outputLabel.setText to empty string), get the country at index from countryArray, print out a question about it like What country is this? and/or What's this country's capital?. Get the user's answer using scan.nextLine() and check if it is equal to the country's data using its get methods and print out correct or incorrect.
   */
+ //pre con - countryArray is filled with Country objects
+  //post con - outputLabel shows whether the user's answer is correct or incorrect
   public void quizButtonClick()
   {
     Scanner scan = new Scanner(System.in); 
